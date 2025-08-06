@@ -104,6 +104,12 @@ bridge_encoder_reset_state(OpusEncoder *st)
 	return opus_encoder_ctl(st, OPUS_RESET_STATE);
 }
 
+int
+bridge_encoder_get_prev_signal_type(OpusEncoder *st, opus_int32 *prev_signal_type)
+{
+	return opus_encoder_ctl(st, OPUS_GET_PREVSIGNALTYPE(prev_signal_type));
+}
+
 */
 import "C"
 
@@ -399,4 +405,13 @@ func (enc *Encoder) Reset() error {
 		return Error(res)
 	}
 	return nil
+}
+
+func (enc *Encoder) PrevSignalType() (int, error) {
+	var prev_signal_type C.opus_int32
+	res := C.bridge_encoder_get_prev_signal_type(enc.p, &prev_signal_type)
+	if res != C.OPUS_OK {
+		return 0, Error(res)
+	}
+	return int(prev_signal_type), nil
 }

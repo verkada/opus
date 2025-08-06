@@ -28,7 +28,10 @@ const (
 	xMAX_FRAME_SIZE    = xMAX_BITRATE * xMAX_FRAME_SIZE_MS / 1000
 	// Maximum size of an encoded frame. I actually have no idea, but this
 	// looks like it's big enough.
-	maxEncodedFrameSize = 10000
+	maxEncodedFrameSize         = 10000
+	OPUS_TYPE_NO_VOICE_ACTIVITY = 0
+	OPUS_TYPE_UNVOICED          = 1
+	OPUS_TYPE_VOICED            = 2
 )
 
 func Version() string {

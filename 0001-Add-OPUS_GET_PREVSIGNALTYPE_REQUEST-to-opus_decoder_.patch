@@ -1,0 +1,139 @@
+From 8a1acea2d45a455866be54f71833545fd1670f66 Mon Sep 17 00:00:00 2001
+From: Matthew MacGregor <matthew.macgregor@verkada.com>
+Date: Thu, 31 Jul 2025 16:05:25 -0700
+Subject: [PATCH] Add OPUS_GET_PREVSIGNALTYPE_REQUEST to opus_decoder_ctl and
+ opus_encoder_ctl
+
+---
+ include/opus_defines.h |  3 +++
+ silk/dec_API.c         | 14 --------------
+ silk/structs.h         | 13 +++++++++++++
+ src/opus_decoder.c     | 12 +++++++++++-
+ src/opus_encoder.c     | 11 +++++++++++
+ 5 files changed, 38 insertions(+), 15 deletions(-)
+
+diff --git a/include/opus_defines.h b/include/opus_defines.h
+index cd8f4dde..5f4dfc69 100644
+--- a/include/opus_defines.h
++++ b/include/opus_defines.h
+@@ -173,6 +173,7 @@ extern "C" {
+ #define OPUS_GET_DRED_DURATION_REQUEST 4051
+ #define OPUS_SET_DNN_BLOB_REQUEST 4052
+ /*#define OPUS_GET_DNN_BLOB_REQUEST 4053 */
++#define OPUS_GET_PREVSIGNALTYPE_REQUEST 4054
+ 
+ /** Defines for the presence of extended APIs. */
+ #define OPUS_HAVE_OPUS_PROJECTION_H
+@@ -724,6 +725,8 @@ extern "C" {
+   */
+ #define OPUS_GET_SAMPLE_RATE(x) OPUS_GET_SAMPLE_RATE_REQUEST, __opus_check_int_ptr(x)
+ 
++#define OPUS_GET_PREVSIGNALTYPE(x) OPUS_GET_PREVSIGNALTYPE_REQUEST, __opus_check_int_ptr(x)
++
+ /** If set to 1, disables the use of phase inversion for intensity stereo,
+   * improving the quality of mono downmixes, but slightly reducing normal
+   * stereo quality. Disabling phase inversion in the decoder does not comply
+diff --git a/silk/dec_API.c b/silk/dec_API.c
+index c1091d13..c29381c3 100644
+--- a/silk/dec_API.c
++++ b/silk/dec_API.c
+@@ -38,20 +38,6 @@ POSSIBILITY OF SUCH DAMAGE.
+ #include "osce_structs.h"
+ #endif
+ 
+-/************************/
+-/* Decoder Super Struct */
+-/************************/
+-typedef struct {
+-    silk_decoder_state          channel_state[ DECODER_NUM_CHANNELS ];
+-    stereo_dec_state                sStereo;
+-    opus_int                         nChannelsAPI;
+-    opus_int                         nChannelsInternal;
+-    opus_int                         prev_decode_only_middle;
+-#ifdef ENABLE_OSCE
+-    OSCEModel                        osce_model;
+-#endif
+-} silk_decoder;
+-
+ /*********************/
+ /* Decoder functions */
+ /*********************/
+diff --git a/silk/structs.h b/silk/structs.h
+index 38243be1..82ccf9de 100644
+--- a/silk/structs.h
++++ b/silk/structs.h
+@@ -349,6 +349,19 @@ typedef struct {
+     opus_int                    LTP_scale_Q14;
+ } silk_decoder_control;
+ 
++/************************/
++/* Decoder Super Struct */
++/************************/
++typedef struct {
++    silk_decoder_state          channel_state[ DECODER_NUM_CHANNELS ];
++    stereo_dec_state                sStereo;
++    opus_int                         nChannelsAPI;
++    opus_int                         nChannelsInternal;
++    opus_int                         prev_decode_only_middle;
++#ifdef ENABLE_OSCE
++    OSCEModel                        osce_model;
++#endif
++} silk_decoder;
+ 
+ #ifdef __cplusplus
+ }
+diff --git a/src/opus_decoder.c b/src/opus_decoder.c
+index b57c8094..b92841b8 100644
+--- a/src/opus_decoder.c
++++ b/src/opus_decoder.c
+@@ -907,7 +907,7 @@ int opus_decoder_ctl(OpusDecoder *st, int request, ...)
+ {
+    int ret = OPUS_OK;
+    va_list ap;
+-   void *silk_dec;
++   silk_decoder *silk_dec;
+    CELTDecoder *celt_dec;
+ 
+    silk_dec = (char*)st+st->silk_dec_offset;
+@@ -918,6 +918,16 @@ int opus_decoder_ctl(OpusDecoder *st, int request, ...)
+ 
+    switch (request)
+    {
++   case OPUS_GET_PREVSIGNALTYPE_REQUEST:
++   {
++      opus_int32 *value = va_arg(ap, opus_int32*);
++      if (!value)
++      {
++         goto bad_arg;
++      }
++      *value = silk_dec->channel_state[0].prevSignalType;
++   }
++   break;
+    case OPUS_GET_BANDWIDTH_REQUEST:
+    {
+       opus_int32 *value = va_arg(ap, opus_int32*);
+diff --git a/src/opus_encoder.c b/src/opus_encoder.c
+index d18d582f..7783ddf4 100644
+--- a/src/opus_encoder.c
++++ b/src/opus_encoder.c
+@@ -2543,6 +2543,17 @@ int opus_encoder_ctl(OpusEncoder *st, int request, ...)
+ 
+     switch (request)
+     {
++        case OPUS_GET_PREVSIGNALTYPE_REQUEST:
++        {
++            opus_int32 *value = va_arg(ap, opus_int32*);
++            if (!value)
++            {
++               goto bad_arg;
++            }
++            silk_encoder *silk_enc = (silk_encoder*)((void*)st+st->silk_enc_offset);
++            *value = silk_enc->state_Fxx[0].sCmn.prevSignalType;
++        }
++        break;
+         case OPUS_SET_APPLICATION_REQUEST:
+         {
+             opus_int32 value = va_arg(ap, opus_int32);
+-- 
+2.39.5 (Apple Git-154)
+
