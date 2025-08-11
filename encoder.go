@@ -13,24 +13,32 @@ import (
 #cgo pkg-config: opus
 #include <opus.h>
 
+#cgo noescape bridge_encoder_set_dtx
+#cgo nocallback bridge_encoder_set_dtx
 int
 bridge_encoder_set_dtx(OpusEncoder *st, opus_int32 use_dtx)
 {
 	return opus_encoder_ctl(st, OPUS_SET_DTX(use_dtx));
 }
 
+#cgo noescape bridge_encoder_get_dtx
+#cgo nocallback bridge_encoder_get_dtx
 int
 bridge_encoder_get_dtx(OpusEncoder *st, opus_int32 *dtx)
 {
 	return opus_encoder_ctl(st, OPUS_GET_DTX(dtx));
 }
 
+#cgo noescape bridge_encoder_get_in_dtx
+#cgo nocallback bridge_encoder_get_in_dtx
 int
 bridge_encoder_get_in_dtx(OpusEncoder *st, opus_int32 *in_dtx)
 {
 	return opus_encoder_ctl(st, OPUS_GET_IN_DTX(in_dtx));
 }
 
+#cgo noescape bridge_encoder_get_sample_rate
+#cgo nocallback bridge_encoder_get_sample_rate
 int
 bridge_encoder_get_sample_rate(OpusEncoder *st, opus_int32 *sample_rate)
 {
@@ -38,78 +46,104 @@ bridge_encoder_get_sample_rate(OpusEncoder *st, opus_int32 *sample_rate)
 }
 
 
+#cgo noescape bridge_encoder_set_bitrate
+#cgo nocallback bridge_encoder_set_bitrate
 int
 bridge_encoder_set_bitrate(OpusEncoder *st, opus_int32 bitrate)
 {
 	return opus_encoder_ctl(st, OPUS_SET_BITRATE(bitrate));
 }
 
+#cgo noescape bridge_encoder_get_bitrate
+#cgo nocallback bridge_encoder_get_bitrate
 int
 bridge_encoder_get_bitrate(OpusEncoder *st, opus_int32 *bitrate)
 {
 	return opus_encoder_ctl(st, OPUS_GET_BITRATE(bitrate));
 }
 
+#cgo noescape bridge_encoder_set_complexity
+#cgo nocallback bridge_encoder_set_complexity
 int
 bridge_encoder_set_complexity(OpusEncoder *st, opus_int32 complexity)
 {
 	return opus_encoder_ctl(st, OPUS_SET_COMPLEXITY(complexity));
 }
 
+#cgo noescape bridge_encoder_get_complexity
+#cgo nocallback bridge_encoder_get_complexity
 int
 bridge_encoder_get_complexity(OpusEncoder *st, opus_int32 *complexity)
 {
 	return opus_encoder_ctl(st, OPUS_GET_COMPLEXITY(complexity));
 }
 
+#cgo noescape bridge_encoder_set_max_bandwidth
+#cgo nocallback bridge_encoder_set_max_bandwidth
 int
 bridge_encoder_set_max_bandwidth(OpusEncoder *st, opus_int32 max_bw)
 {
 	return opus_encoder_ctl(st, OPUS_SET_MAX_BANDWIDTH(max_bw));
 }
 
+#cgo noescape bridge_encoder_get_max_bandwidth
+#cgo nocallback bridge_encoder_get_max_bandwidth
 int
 bridge_encoder_get_max_bandwidth(OpusEncoder *st, opus_int32 *max_bw)
 {
 	return opus_encoder_ctl(st, OPUS_GET_MAX_BANDWIDTH(max_bw));
 }
 
+#cgo noescape bridge_encoder_set_inband_fec
+#cgo nocallback bridge_encoder_set_inband_fec
 int
 bridge_encoder_set_inband_fec(OpusEncoder *st, opus_int32 fec)
 {
 	return opus_encoder_ctl(st, OPUS_SET_INBAND_FEC(fec));
 }
 
+#cgo noescape bridge_encoder_get_inband_fec
+#cgo nocallback bridge_encoder_get_inband_fec
 int
 bridge_encoder_get_inband_fec(OpusEncoder *st, opus_int32 *fec)
 {
 	return opus_encoder_ctl(st, OPUS_GET_INBAND_FEC(fec));
 }
 
+#cgo noescape bridge_encoder_set_packet_loss_perc
+#cgo nocallback bridge_encoder_set_packet_loss_perc
 int
 bridge_encoder_set_packet_loss_perc(OpusEncoder *st, opus_int32 loss_perc)
 {
 	return opus_encoder_ctl(st, OPUS_SET_PACKET_LOSS_PERC(loss_perc));
 }
 
+#cgo noescape bridge_encoder_get_packet_loss_perc
+#cgo nocallback bridge_encoder_get_packet_loss_perc
 int
 bridge_encoder_get_packet_loss_perc(OpusEncoder *st, opus_int32 *loss_perc)
 {
 	return opus_encoder_ctl(st, OPUS_GET_PACKET_LOSS_PERC(loss_perc));
 }
 
+#cgo noescape bridge_encoder_reset_state
+#cgo nocallback bridge_encoder_reset_state
 int
 bridge_encoder_reset_state(OpusEncoder *st)
 {
 	return opus_encoder_ctl(st, OPUS_RESET_STATE);
 }
 
+#cgo noescape bridge_encoder_get_prev_signal_type
+#cgo nocallback bridge_encoder_get_prev_signal_type
 int
 bridge_encoder_get_prev_signal_type(OpusEncoder *st, opus_int32 *prev_signal_type)
 {
 	return opus_encoder_ctl(st, OPUS_GET_PREVSIGNALTYPE(prev_signal_type));
 }
 
+#cgo noescape bridge_encoder_get_prev_mode
+#cgo nocallback bridge_encoder_get_prev_mode
 int
 bridge_encoder_get_prev_mode(OpusEncoder *st, opus_int32 *prev_mode)
 {
