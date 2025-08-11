@@ -32,6 +32,9 @@ const (
 	OPUS_TYPE_NO_VOICE_ACTIVITY = 0
 	OPUS_TYPE_UNVOICED          = 1
 	OPUS_TYPE_VOICED            = 2
+	OPUS_MODE_SILK_ONLY         = 1000
+	OPUS_MODE_HYBRID            = 1001
+	OPUS_MODE_CELT_ONLY         = 1002
 )
 
 func Version() string {

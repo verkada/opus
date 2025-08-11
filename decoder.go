@@ -24,6 +24,12 @@ bridge_decoder_get_prev_signal_type(OpusDecoder *st, opus_int32 *prev_signal_typ
 {
         return opus_decoder_ctl(st, OPUS_GET_PREVSIGNALTYPE(prev_signal_type));
 }
+
+int
+bridge_decoder_get_prev_mode(OpusDecoder *st, opus_int32 *prev_mode)
+{
+        return opus_decoder_ctl(st, OPUS_GET_PREVMODE(prev_mode));
+}
 */
 import "C"
 
@@ -274,4 +280,13 @@ func (dec *Decoder) PrevSignalType() (int, error) {
 		return 0, Error(res)
 	}
 	return int(prev_signal_type), nil
+}
+
+func (dec *Decoder) PrevMode() (int, error) {
+	var prev_mode C.opus_int32
+	res := C.bridge_decoder_get_prev_mode(dec.p, &prev_mode)
+	if res != C.OPUS_OK {
+		return 0, Error(res)
+	}
+	return int(prev_mode), nil
 }
