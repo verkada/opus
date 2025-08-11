@@ -11,20 +11,27 @@ import (
 
 /*
 #cgo pkg-config: opus
+
 #include <opus.h>
 
+#cgo noescape bridge_decoder_get_last_packet_duration
+#cgo nocallback bridge_decoder_get_last_packet_duration
 int
 bridge_decoder_get_last_packet_duration(OpusDecoder *st, opus_int32 *samples)
 {
 	return opus_decoder_ctl(st, OPUS_GET_LAST_PACKET_DURATION(samples));
 }
 
+#cgo noescape bridge_decoder_get_prev_signal_type
+#cgo nocallback bridge_decoder_get_prev_signal_type
 int
 bridge_decoder_get_prev_signal_type(OpusDecoder *st, opus_int32 *prev_signal_type)
 {
         return opus_decoder_ctl(st, OPUS_GET_PREVSIGNALTYPE(prev_signal_type));
 }
 
+#cgo noescape bridge_decoder_get_prev_mode
+#cgo nocallback bridge_decoder_get_prev_mode
 int
 bridge_decoder_get_prev_mode(OpusDecoder *st, opus_int32 *prev_mode)
 {
